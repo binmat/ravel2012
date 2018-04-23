@@ -27,6 +27,6 @@ This phyloseq object contains:
 
 
 ```{r}
-install_github("binmat/ravel_2012")
+install_github("binmat/ravel2012")
 ```
 
