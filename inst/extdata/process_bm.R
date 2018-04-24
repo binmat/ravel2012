@@ -10,7 +10,7 @@ for (i in 1:length(data_rav$`Sample ID`)){
 
 # 1. Creating meta data and abundance table 
 meta<- data_rav[,1:9]
-col_names<- c("Sample_ID","Time_in_study","Subject_ID","Race","Age","Nugent Score","Nugent Category","Community_State_Type", "Total Read Countsd")
+col_names<- c("Sample_ID","Time_in_study","Subject_ID","Race","Age","Nugent Score","Nugent Category","Community_State_Type", "Total Read Counts")
 colnames(meta)<-col_names
 meta$Race <- gsub("0", "Black", meta$Race)
 meta$Race <- gsub("1", "White", meta$Race)
@@ -26,6 +26,7 @@ rownames(abund)<-meta$Sample_ID
 abund<-as.data.frame(t(abund))
 colnames(abund)<-data_rav$`Sample ID`
 abund<-add_column(abund, organism = row.names(abund), .before = abund$ID_400_010106)
+
 
 # 2. Creating and processing organisms to make OTU table
 df_org<-as.data.frame(abund$organism)
@@ -87,7 +88,8 @@ final_otu[sapply(final_otu, is.character)] <- lapply(final_otu[sapply(final_otu,
 # 4. Creating Phyloseq object  
 row.names(abund)<-final_otu$OTU
 abund<-abund[,2:938]
-seq.data<- as.matrix(abund+1)
+#seq.data<- as.matrix(abund+1)
+seq.data<- as.matrix(abund) # Let us not add pseudocount
 
 seqa_otu = otu_table(seq.data, taxa_are_rows = TRUE)
 metaa_sample = sample_data(meta)
