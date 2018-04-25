@@ -4,7 +4,7 @@ author: "Binu Mathew"
 date: "April 24, 2018"
 output: html_document
 ---
-# ravel_2012 data package
+# ravel2012 data package
 
 This package contains one phyloseq object of data from Ravel et al.(2012). It contains data from following sample:
 
@@ -27,6 +27,6 @@ This phyloseq object contains:
 
 
 ```{r}
-install_github("binmat/ravel_2012")
+install_github("binmat/ravel2012")
 ```
 
