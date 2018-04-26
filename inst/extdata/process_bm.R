@@ -3,26 +3,26 @@ library(tibble)
 library(phyloseq)
 
 data_rav<- read_csv("ravel_data.csv")
-# Concatenating "ID_" to sample id 
+# Concatenating "ID_" to sample id
 for (i in 1:length(data_rav$`Sample ID`)){
     data_rav[i,1]<-paste("ID", data_rav[i,1],sep = "_")
 }
 
-# 1. Creating meta data and abundance table 
+# 1. Creating meta data and abundance table
 meta<- data_rav[,1:9]
-col_names<- c("Sample_ID","Time_in_study","Subject_ID","Race","Age","Nugent Score","Nugent Category","Community_State_Type", "Total Read Counts")
+col_names<- c("Sample","Time","Subject","Ethnicity","Age","Nugent_Score","Nugent_Category","Community_State_Type", "Library_Size")
 colnames(meta)<-col_names
-meta$Race <- gsub("0", "Black", meta$Race)
-meta$Race <- gsub("1", "White", meta$Race)
-meta$Race<- gsub("4", "Others", meta$Race)
-meta$Race <- gsub("5", "Hispanic", meta$Race)
-meta$Race <- factor(meta$Race)
-meta$Subject_ID <- factor(meta$Subject_ID)
+meta$Ethnicity <- gsub("0", "Black", meta$Ethnicity)
+meta$Ethnicity <- gsub("1", "White", meta$Ethnicity)
+meta$Ethnicity<- gsub("4", "Others", meta$Ethnicity)
+meta$Ethnicity <- gsub("5", "Hispanic", meta$Ethnicity)
+meta$Ethnicity <- factor(meta$Ethnicity)
+meta$Subject <- factor(meta$Subject)
 row.names(meta) <- data_rav$`Sample ID`
-meta$Sample_ID<-row.names(meta)
+meta$Sample<-row.names(meta)
 
 abund <- data_rav[,c(11:340)]
-rownames(abund)<-meta$Sample_ID
+rownames(abund)<-meta$Sample
 abund<-as.data.frame(t(abund))
 colnames(abund)<-data_rav$`Sample ID`
 abund<-add_column(abund, organism = row.names(abund), .before = abund$ID_400_010106)
@@ -34,7 +34,7 @@ colnames(df_org)<-"genus"
 df_org$genus<-as.character(df_org$genus)
 y<-strsplit(df_org$genus,"[.]")
 df_org<-add_column(df_org,  species= "", .after = "genus")
-df_org$genus<- sapply(y,"[[",1) 
+df_org$genus<- sapply(y,"[[",1)
 for  (i in 1:330){
   if (length(y[[i]]==2)){
     df_org$species[i]<-y[[i]][2]
@@ -47,7 +47,7 @@ df_org$species<- gsub(" ", "", df_org$species)
 df_org$genus[df_org$genus=="L"]<-"Lactobacillus"
 
 
-# 3. Creating OTU table 
+# 3. Creating OTU table
 otu <- read.table("Greengenes_16S_all_2011-1.txt",sep = ";", header = FALSE)
 otu[sapply(otu, is.factor)] <- lapply(otu[sapply(otu, is.factor)],as.character)
 y<-strsplit(otu$V1,"\tk__")
@@ -85,16 +85,16 @@ row.names(final_otu)<-final_otu$OTU
 final_otu[sapply(final_otu, is.character)] <- lapply(final_otu[sapply(final_otu, is.character)],as.factor)
 
 
-# 4. Creating Phyloseq object  
+# 4. Creating Phyloseq object
 row.names(abund)<-final_otu$OTU
 abund<-abund[,2:938]
-#seq.data<- as.matrix(abund+1)
-seq.data<- as.matrix(abund) # Let us not add pseudocount
+seq.data<- as.matrix(abund)
 
 seqa_otu = otu_table(seq.data, taxa_are_rows = TRUE)
 metaa_sample = sample_data(meta)
 taxaa_tax = tax_table(as.matrix(final_otu))
 ravel_2012<- phyloseq(seqa_otu, metaa_sample, taxaa_tax)
-save(ravel_2012, file = "ravel_2012.rda")
+setwd("~/Desktop/Ravel2012/ravel2012/ravel2012/data")
+save(ravel_2012, file = "ravel2012.rda")
 rm(data_rav,df_org,final_otu,meta,metaa_sample,otu,seq.data,y,c,abund,col_nam,col_names,i,seqa_otu,taxaa_tax)
 

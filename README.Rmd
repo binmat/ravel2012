@@ -4,10 +4,7 @@ author: "Binu Mathew and Leo Lahti"
 date: "April 24, 2018"
 output: html_document
 ---
-<<<<<<< HEAD
 # ravel2012 data package
-=======
->>>>>>> 8c0010cc6419968a654f0af42e9cb24a6e243fe2
 
 
 # R data package: ravel2012
@@ -27,11 +24,8 @@ install_github("binmat/ravel2012")
 Load the package
 
 ```{r}
-<<<<<<< HEAD
 install_github("binmat/ravel2012")
-=======
 library(ravel2012)
->>>>>>> 8c0010cc6419968a654f0af42e9cb24a6e243fe2
 ```
 
 
