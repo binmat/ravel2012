@@ -4,8 +4,6 @@ author: "Binu Mathew and Leo Lahti"
 date: "April 24, 2018"
 output: html_document
 ---
-# ravel2012 data package
-
 
 # R data package: ravel2012
 
